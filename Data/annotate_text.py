@@ -67,9 +67,11 @@ def clean_date(date):
 
 
 def get_week(frame, date):
-    if date < frame.iloc[0]['schedule_date']:
+    if 2 < date.month < 9:
+        return 'Offseason'
+    if date <= frame.iloc[0]['schedule_date']:
         return frame.iloc[0]['schedule_week']
-    for i in range(1, len(frame)-1):
+    for i in range(0, len(frame)-1):
         if frame.iloc[i]['schedule_date'] < date <= frame.iloc[i + 1]['schedule_date']:
             return frame.iloc[i+1]['schedule_week']
     if date > frame.iloc[-1]['schedule_date']:
