@@ -4,6 +4,7 @@ import pickle
 import spacy
 import pandas as pd
 from datetime import datetime
+from datetime import timedelta
 from spacy.pipeline import EntityRuler
 
 
@@ -37,13 +38,24 @@ def main():
     names.extend(teams)
     entities = {person: 0 for person in names}
     processed = []
+    next_year = []
 
     games = pd.read_csv('/home/jon/Desktop/thesis/Data/Kaggle CSV Files/Games/spreadspoke_scores.csv')
-    games = games[(games['schedule_season'] > 2009) & (games['schedule_season'] < 2014)]
+    games = games[games['schedule_season'] == year]
     games = games[['schedule_date', 'schedule_season', 'schedule_week']]
     games.drop_duplicates(['schedule_date', 'schedule_week'], inplace=True)
     games.drop_duplicates(['schedule_season', 'schedule_week'], keep='last', inplace=True)
     games['schedule_date'] = pd.to_datetime(games['schedule_date'])
+
+    date_map = {}
+
+    for i in range(len(games) - 1):
+        start = games.iloc[i]['schedule_date']
+        end = games.iloc[i + 1]['schedule_date']
+        index = pd.date_range(start, end)
+        date_map[games.iloc[i]['schedule_week']] = index
+
+    date_map['Offseason'] = pd.date_range(datetime(2010, 2, 7), datetime(2010, 9, 6))
 
     for article in articles:
         this_article = []
@@ -55,27 +67,30 @@ def main():
                     this_article.append(ent.text)
 
         article['Entities'] = this_article
-        article['Week'] = get_week(games, clean_date(article['date']))
+        week = get_week(date_map, clean_date(article['date']))
+        if week is None:
+            next_year.append(article)
+        else:
+            article['Week'] = week
         processed.append(article)
 
     with open(f'/home/jon/Desktop/thesis/Data/Articles/Annotated/{year}_annotated.json', 'w') as f:
         json.dump(processed, f)
+
+    with open(f'/home/jon/Desktop/thesis/Data/Articles/Annotated/{year+1}_addendum.json', 'w') as f:
+        json.dump(next_year, f)
 
 
 def clean_date(date):
     return datetime.strptime(date.replace(',', ''), '%b %d %Y')
 
 
-def get_week(frame, date):
-    if 2 < date.month < 9:
-        return 'Offseason'
-    if date <= frame.iloc[0]['schedule_date']:
-        return frame.iloc[0]['schedule_week']
-    for i in range(0, len(frame)-1):
-        if frame.iloc[i]['schedule_date'] < date <= frame.iloc[i + 1]['schedule_date']:
-            return frame.iloc[i+1]['schedule_week']
-    if date > frame.iloc[-1]['schedule_date']:
-        return frame.iloc[-1]['schedule_week']
+def get_week(date_map, date):
+    for week in date_map:
+        if date in date_map[week]:
+            return week
+
+    return None
 
 
 if __name__ == "__main__":
