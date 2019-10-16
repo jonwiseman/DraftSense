@@ -72,7 +72,7 @@ def main():
             next_year.append(article)
         else:
             article['Week'] = week
-        processed.append(article)
+            processed.append(article)
 
     with open(f'/home/jon/Desktop/thesis/Data/Articles/Annotated/{year}_annotated.json', 'w') as f:
         json.dump(processed, f)
