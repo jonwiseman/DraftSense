@@ -2,6 +2,7 @@ import glob
 import pandas as pd
 import pickle
 import argparse
+import os
 
 
 def main():
@@ -11,7 +12,7 @@ def main():
 
     year = args.y
 
-    file_names = glob.glob('/home/jon/Desktop/thesis/Data/Kaggle CSV Files/*.csv')
+    file_names = glob.glob(r'../Data/Kaggle CSV Files/Stats/*.csv')
     master_frame = pd.read_csv(file_names[0])
     master_frame = master_frame[master_frame['Year'] == year]
     master_frame = master_frame[['Name', 'Team']]
@@ -41,18 +42,21 @@ def main():
         if len(team.split()) == 3:  # Cities with two names (ex. 'San Francisco')
             aliases[team.split()[0] + ' ' + team.split()[1]] = team  # Map city name to team name
             if team.split()[0] + ' ' + team.split()[1] != 'New York':
-                city_names.append(team.split()[0] + ' ' + team.split()[1])  # ERROR: NEW YORK GETS FUCKED UP
+                city_names.append(team.split()[0] + ' ' + team.split()[1])  # ERROR: NEW YORK GETS MESSED UP
         else:  # Cities with one name (ex. 'Denver')
             aliases[team.split()[0]] = team
             city_names.append(team.split()[0])
 
-    pickle.dump(full_names, open(f'/home/jon/Desktop/thesis/Pickles/{year}/full_names.p', "wb"))
-    pickle.dump(team_names, open(f'/home/jon/Desktop/thesis/Pickles/{year}/team_names.p', "wb"))
-    pickle.dump(city_names, open(f'/home/jon/Desktop/thesis/Pickles/{year}/city_names.p', "wb"))
+    if not os.path.exists(fr'../Data/Pickles/teams.pickle'):
+        pickle.dump(full_names, open(f'../Data/Pickles/teams.pickle', "wb"))
+    if not os.path.exists(fr'../Data/Pickles/team_names.pickle'):
+        pickle.dump(team_names, open(f'../Data/Pickles/team_names.pickle', "wb"))
+    if not os.path.exists(fr'../Data/Pickles/city_names.pickle'):
+        pickle.dump(city_names, open(f'../Data/Pickles/city_names.pickle', "wb"))
+    if not os.path.exists(fr'../Data/Pickles/teams_aliases.pickle'):
+        pickle.dump(aliases, open(f'../Data/Pickles/teams_aliases.pickle', 'wb'))  # Pickle aliases-teams dictionary
     pickle.dump(players_teams,
-                open(f'/home/jon/Desktop/thesis/Pickles/{year}/players_teams_mapping.p', 'wb'))  # Pickle players-teams dictionary
-    pickle.dump(aliases, open(f'/home/jon/Desktop/thesis/Pickles/{year}/teams_aliases.p', 'wb'))  # Pickle aliases-teams dictinoary
-    pickle.dump(teams, open(f'/home/jon/Desktop/thesis/Pickles/{year}/teams.p', 'wb'))  # Pickle list of teams
+                open(f'../Data/Pickles/{year}/players_teams_mapping.pickle', 'wb'))  # Pickle players-teams dictionary
 
 
 if __name__ == '__main__':

@@ -1,0 +1,6 @@
+spacy==2.2.2
+pandas==0.25.3
+scrapy==1.8.0
+xlrd==1.2.0
+
+

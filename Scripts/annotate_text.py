@@ -17,10 +17,10 @@ def main():
     year = args.y
 
     nlp = spacy.load("en_core_web_lg")
-    with open(f'/home/jon/Desktop/thesis/Data/Articles/Processed/{year}_processed.json', 'r') as f:
+    with open(fr'../Data/Articles/Processed/{year}_processed.json', 'r') as f:
         articles = json.load(f)
-    teams = pickle.load(open('/home/jon/Desktop/thesis/Pickles/2010/team_names.p', 'rb'))
-    people = pickle.load(open('/home/jon/Desktop/thesis/Pickles/people.p', 'rb'))
+    teams = pickle.load(open('../Data/Pickles/team_names.pickle', 'rb'))
+    people = pickle.load(open('../Data/Pickles/people.pickle', 'rb'))
 
     names = list(people.keys())
 
@@ -40,7 +40,7 @@ def main():
     processed = []
     next_year = []
 
-    games = pd.read_csv('/home/jon/Desktop/thesis/Data/Kaggle CSV Files/Games/spreadspoke_scores.csv')
+    games = pd.read_csv(r'../Data/Kaggle CSV Files/Games/spreadspoke_scores.csv')
     games = games[games['schedule_season'] == year]
     games = games[['schedule_date', 'schedule_season', 'schedule_week']]
     games.drop_duplicates(['schedule_date', 'schedule_week'], inplace=True)
@@ -74,10 +74,10 @@ def main():
             article['Week'] = week
             processed.append(article)
 
-    with open(f'/home/jon/Desktop/thesis/Data/Articles/Annotated/{year}_annotated.json', 'w') as f:
+    with open(f'../Data/Articles/Annotated/{year}_annotated.json', 'w') as f:
         json.dump(processed, f)
 
-    with open(f'/home/jon/Desktop/thesis/Data/Articles/Annotated/{year+1}_addendum.json', 'w') as f:
+    with open(f'../Data/Articles/Annotated/{year+1}_addendum.json', 'w') as f:
         json.dump(next_year, f)
 
 

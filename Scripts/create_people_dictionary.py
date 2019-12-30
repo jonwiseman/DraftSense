@@ -41,7 +41,7 @@ def main():
 
     for year in years:
         for team in teams:
-            df = pd.read_excel(f'/home/jon/Desktop/thesis/Data/Historical Depth Charts/{year}/{team}.xlsx')
+            df = pd.read_excel(fr'../Data/Historical Depth Charts/{year}/{team}.xlsx')
             df = df[['Player', 'Pos']]
             df['Player'] = df['Player'].apply(clean_names)
 
@@ -54,7 +54,7 @@ def main():
                 years_dict[year] = {'team': team, 'role': df[df['Player'] == player]['Pos'].values[0]}
                 people[player] = years_dict
 
-    with open(f'/home/jon/Desktop/thesis/Data/Coaches/coaches.json', 'r') as f:
+    with open(fr'../Data/Coaches/coaches.json', 'r') as f:
         data = json.load(f)
     for line in data:
         meta = line['Metadata']
@@ -72,7 +72,7 @@ def main():
         years_dict[year] = {'team': team, 'role': 'Coach'}
         people[coach] = years_dict
 
-    pickle.dump(people, open('/home/jon/Desktop/thesis/Pickles/people.p', 'wb'))
+    pickle.dump(people, open(fr'../Data/Pickles/people.pickle', 'wb'))
 
 
 def clean_names(x):

@@ -6,7 +6,7 @@ class CoachSpider(scrapy.Spider):
     name = "Coach"
 
     def start_requests(self):
-        teams = pickle.load(open('/home/jon/Desktop/thesis/Pickles/2010/full_names.p', 'rb'))
+        teams = pickle.load(open('../Data/Pickles/teams.pickle', 'rb'))
         years = ['2010', '2011', '2012', '2013']
 
         for year in years:

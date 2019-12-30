@@ -6,13 +6,15 @@ class LinksSpider(scrapy.Spider):
 
     def start_requests(self):
         url_base = 'http://www.espn.com/nfl/news/archive/_/month/'
-        months = ['January', 'February', 'August', 'September', 'October', 'November', 'December']
-        years = ['2013', '2014']
+        months = ['september', 'october', 'november', 'december']
+        years = ['2010', '2011', '2012', '2013']
 
-        fall_months = [f'{url_base}{month}/year/{years[0]}' for month in months[2:]]
-        spring_months = [f'{url_base}{month}/year/{years[1]}' for month in months[:2]]
+        month_bases = [url_base + month for month in months]
 
-        urls = fall_months + spring_months
+        urls = []
+        for year in years:
+            for base in month_bases:
+                urls.append(base + r'/year/' + year)
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
 
