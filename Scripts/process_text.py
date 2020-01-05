@@ -14,10 +14,10 @@ def main():
 
     year = args.y
 
-    with open(f'/home/jon/Desktop/thesis/Data/Articles/Raw/{year}.json', 'r') as f:
+    with open(f'../Data/Articles/Raw/{year}.json', 'r') as f:
         data = json.load(f)
-    full_team_names = pickle.load(open(f'/home/jon/Desktop/thesis/Pickles/2010/full_names.p', 'rb'))
-    people = pickle.load(open(f'/home/jon/Desktop/thesis/Pickles/people.p', 'rb'))
+    full_team_names = pickle.load(open(f'../Data/Pickles/teams.pickle', 'rb'))
+    people = pickle.load(open(f'../Data/Pickles/people.pickle', 'rb'))
 
     players = list(people.keys())
     processed = []
@@ -33,7 +33,7 @@ def main():
             article['content'] = clean_names(article['content'], players)
             processed.append(article)
 
-    with open(f'/home/jon/Desktop/thesis/Data/Articles/Processed/{year}_processed.json', 'w') as f:
+    with open(f'../Data/Articles/Processed/{year}_processed.json', 'w') as f:
         json.dump(processed, f)
 
 
