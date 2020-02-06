@@ -29,7 +29,7 @@ def main():
     nfl = reddit.subreddit('nfl')
 
     post_id = None
-    for submission in nfl.search(f'author:NFL_Mod title:{name}'):
+    for submission in nfl.search(f'author:NFL_Mod title:"{name}"'):
         post_id = submission.id
 
     logging.info(f'Submission found with id: {post_id}')
