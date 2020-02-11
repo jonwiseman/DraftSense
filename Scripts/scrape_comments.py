@@ -3,7 +3,6 @@ import configparser
 import logging
 import praw
 import json
-import time
 
 
 def main():
@@ -26,25 +25,25 @@ def main():
                          user_agent=config['Reddit']['user_agent'],
                          username=config['Reddit']['username'])  # create Reddit instance
 
-    nfl = reddit.subreddit('nfl')
+    nfl = reddit.subreddit('nfl')  # get the instance of the r/nfl subreddit
 
-    post_id = None
-    for submission in nfl.search(f'author:NFL_Mod title:"{name}"'):
+    post_id = None  # numeric post ID of draft thread
+    for submission in nfl.search(f'author:NFL_Mod title:"{name}"'):  # search the official moderator threads
         post_id = submission.id
 
     logging.info(f'Submission found with id: {post_id}')
 
-    if post_id is None:
+    if post_id is None:  # player not found in the mod's post history
         logging.error('Name not found in u/NFL_Mod post history.  Comment data cannot be scraped.')
         raise PlayerError
 
     logging.info('Gathering comments...')
 
     post = reddit.submission(id=post_id)
-    post.comments.replace_more(limit=None)
+    post.comments.replace_more(limit=None)  # gather all comments
 
     comments = []
-    for top_level_comment in post.comments:
+    for top_level_comment in post.comments:  # scrape all top- and second-level comments
         for second_level_comment in top_level_comment.replies:
             comments.append({'comment_id': second_level_comment.id,
                              'post_id': second_level_comment.submission.id,
@@ -54,7 +53,7 @@ def main():
                          'comment': top_level_comment.body})
 
     logging.info(f'{len(comments)} comments scraped for {name}')
-    with open(fr'..\Data\Threads\{name.split()[-1]}.json', 'w') as f:
+    with open(fr'..\Data\Threads\{name.split()[-1]}.json', 'w') as f:  # dump comments in .json file
         json.dump(comments, f)  # dump scraped data in .json format
 
 
