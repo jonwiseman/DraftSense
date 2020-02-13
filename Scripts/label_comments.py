@@ -42,7 +42,7 @@ def comment_generator(df, indexes, comments):
             yield df.iloc[cur_index]['comment'], cur_index
             cur_index += 1
         elif response == 'n':
-            exit(df, comments)
+            exit_labeling(df, comments)
         else:
             while response != 'y' and response != 'n':
                 response = str(input('Invalid command.  Fetch another comment?'))
@@ -60,10 +60,10 @@ def handle_response(df, index, comments):
     return df.iloc[index]['comment'] == comments[index]['comment']
 
 
-def exit(df, comments):
+def exit_labeling(df, comments):
     with open(r'../Data/Dataset/labeling_progress.pickle', 'wb') as f:
         pickle.dump(df, f)
-    with open(r'../Data/Dataset/comments.json') as f:
+    with open(r'../Data/Dataset/comments.json', 'w') as f:
         json.dump(comments, f)
 
 
