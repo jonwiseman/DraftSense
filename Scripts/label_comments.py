@@ -34,40 +34,67 @@ def main():
 
 
 def comment_generator(df, indexes, comments):
-    cur_index = indexes[0]
-    response = 'y'
-    while response == 'y' and cur_index < len(indexes):
-        response = str(input('Fetch another comment?'))
+    """
+    The comment_generator method handles user input and yields comments.  User can input 'y' for fetching
+    another comment and 'n' for exiting the program.
+    :param df: master DataFrame
+    :param indexes: list of indexes corresponding to unlabelled comments
+    :param comments: master comments.json file
+    :return: yield a comment for labeling
+    """
+    cur_index = indexes[0]      # index of current comment
+    response = 'y'      # assume yielding a comment
+    while response == 'y' and cur_index < len(indexes):     # while user wants to continue and there are still comments
+        response = str(input('Fetch another comment?'))     # prompt user for further comment labeling
         if response == 'y':
-            yield df.iloc[cur_index]['comment'], cur_index
-            cur_index += 1
+            yield df.iloc[cur_index]['comment'], cur_index      # fetch another comment
+            cur_index += 1      # increment index
         elif response == 'n':
-            exit_labeling(df, comments)
+            exit_labeling(df, comments)     # run exit method
         else:
-            while response != 'y' and response != 'n':
+            while response != 'y' and response != 'n':      # user entered an invalid command
                 response = str(input('Invalid command.  Fetch another comment?'))
 
 
 def handle_response(df, index, comments):
-    response = str(input('Please rate the comment: '))
+    """
+    The handle_response method labels a comment based on user feedback.
+    :param df: master DataFrame
+    :param index: index of current comment
+    :param comments: master comments.json file
+    :return: True if comment was labeled successfully; false otherwise
+    """
+    response = str(input('Please rate the comment: '))      # prompt user for score
 
-    while not response.isnumeric() or (int(response) < 1 or int(response) > 4):
+    while not response.isnumeric() or (int(response) < 1 or int(response) > 4):     # invalid comment score
         response = str(input('Please rate the comment: '))
 
     response = int(response)
-    df.at[index, 'label'] = response
-    comments[index]['rating'] = response
-    return df.iloc[index]['comment'] == comments[index]['comment']
+    df.at[index, 'label'] = response        # update DataFrame and .json file
+    comments[index]['label'] = response
+    return df.iloc[index]['comment'] == comments[index]['comment']      # check to make sure the comments were changed
 
 
 def exit_labeling(df, comments):
-    with open(r'../Data/Dataset/labeling_progress.pickle', 'wb') as f:
+    """
+    The exit_labeling method writes out labeling progress.
+    :param df: master DataFrame
+    :param comments: master comments.json file
+    :return:
+    """
+    with open(r'../Data/Dataset/labeling_progress.pickle', 'wb') as f:      # pickle the DataFrame
         pickle.dump(df, f)
-    with open(r'../Data/Dataset/comments.json', 'w') as f:
+    with open(r'../Data/Dataset/comments.json', 'w') as f:      # write out the DataFrame
         json.dump(comments, f)
 
 
 def check_dataset(df, comments):
+    """
+    The check_dataset method runs on a labeling_progress.pickle to make sure all indexes match
+    :param df: master DataFrame
+    :param comments: master comments.json file
+    :return: an error flag (1) if the two records do not match; 0 otherwise
+    """
     if len(df) != len(comments):
         return 1
 

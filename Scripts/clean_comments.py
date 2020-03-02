@@ -6,11 +6,11 @@ import re
 def main():
     logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
 
-    with open(r'../Data/Dataset/comments.json') as f:
+    with open(r'../Data/Dataset/comments.json') as f:        # open master comments.json file
         comments = json.load(f)
 
-    cleaned_comments = []
-    for comment in comments:
+    cleaned_comments = []       # storage for cleaned comments (.json format)
+    for comment in comments:        # clean each comment in master comments.json file
         filtered_comment = keep_alphabetical(comment['comment'])
         cleaned_comments.append({
             'subject': comment['subject'],
@@ -18,7 +18,7 @@ def main():
             'label': comment['label']
         })
 
-    with open(r'../Data/Dataset/comments.json', 'w') as f:
+    with open(r'../Data/Dataset/comments.json', 'w') as f:      # write out new comments.json file
         json.dump(cleaned_comments, f)
 
 
