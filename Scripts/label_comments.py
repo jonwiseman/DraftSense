@@ -44,7 +44,8 @@ def comment_generator(df, indexes, comments):
     """
     cur_index = indexes[0]      # index of current comment
     response = 'y'      # assume yielding a comment
-    while response == 'y' and cur_index < len(indexes):     # while user wants to continue and there are still comments
+
+    while response == 'y' and cur_index < len(df):     # while user wants to continue and there are still comments
         response = str(input('Fetch another comment?'))     # prompt user for further comment labeling
         if response == 'y':
             yield df.iloc[cur_index]['comment'], cur_index      # fetch another comment
