@@ -24,6 +24,8 @@ def main():
 
     indexes = df[df['label'] == -1].index       # get remaining indexes for labeling
     logging.info(f'{len(indexes)} comments are unlabeled')
+    if len(indexes) == 0:
+        return 0
 
     for comment, index in comment_generator(df, indexes, comments):     # iterate through comments
         print(comment)      # print the comment for viewing
