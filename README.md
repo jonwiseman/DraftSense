@@ -59,4 +59,6 @@ The Data folder contains the project's developed dataset and intermediate data. 
 The Docs folder contains project documents, such as the project's proposal, milestone reports, and the final report.  The requirements.txt is also stored here.  
 
 **Notebooks**  
-This folder contains intermediate script progress; these files are not part of the project's pipeline but represent my progress on developing scripts.  That is, they are the code that will become scripts but are not yet finished.
+
+*Exploratory Data Analysis*  
+Contains some exploratory data analysis on the fully labeled dataset.
