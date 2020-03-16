@@ -55,6 +55,9 @@ def comment_generator(df, indexes, comments):
         else:
             while response != 'y' and response != 'n':      # user entered an invalid command
                 response = str(input('Invalid command.  Fetch another comment?'))
+				
+    if cur_index >= len(df):
+        exit_labeling(df, comments)
 
 
 def handle_response(df, index, comments):
