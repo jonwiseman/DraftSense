@@ -1,3 +1,5 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/jonwiseman/draftsense/badge)](https://www.codefactor.io/repository/github/jonwiseman/draftsense)
+
 This repository contains files related to DraftSense, a sentiment analyzer developed for CS495: Honors Projects in Computing.
 
 ## Goal  
